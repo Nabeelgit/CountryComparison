@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+header {
+    background-color: green;
+    width: 100vw;
+    text-align: center;
+    color: white;
+}

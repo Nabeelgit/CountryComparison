@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>API Test</h1>
+        </header>
+        <button id="fetchRandomCountry">Fetch Random Country</button>
+        <div id="result" style="margin-top: 1rem;"></div>
+    </div>
+    <script>
+        document.getElementById('fetchRandomCountry').addEventListener('click', function() {
+            fetch('./data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const countries = data.countries;
+                    const randomCountry = countries[Math.floor(Math.random() * countries.length)].name;
+
+                    fetch(`/api/country?name=${encodeURIComponent(randomCountry)}`)
+                        .then(response => response.json())
+                        .then(countryData => {
+                            const resultDiv = document.getElementById('result');
+                            const factors = ['coastline', 'gdp', 'healthcare', 'infrastructure', 'gdp_per_capita', 'purchasing_power', 'military_strength', 'land_mass', 'population', 'quality_of_life'];
+
+                            const countryStats = factors.map(factor => `<li><strong>${factor}:</strong> ${countryData[factor]}</li>`).join('');
+
+                            resultDiv.innerHTML = `
+                                <h2>${countryData.name}</h2>
+                                <ul>${countryStats}</ul>
+                            `;
+                        })
+                        .catch(error => {
+                            document.getElementById('result').textContent = 'Error fetching country data';
+                            console.error('Error:', error);
+                        });
+                })
+                .catch(error => {
+                    document.getElementById('result').textContent = 'Error fetching country list';
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
